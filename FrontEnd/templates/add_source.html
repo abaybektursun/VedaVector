@@ -1,0 +1,114 @@
+{% extends "base.html" %} {% block title %}Sample{% endblock %} 
+{% block content %}
+
+<head>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script>
+  gapi.load('auth2', function() {
+    gapi.auth2.init({
+      client_id: '68746824277-t2021ivtkphusqcar5gv525bq0idr6jm.apps.googleusercontent.com',
+    });
+  });
+  function onSignIn(googleUser) {
+    var id_token = googleUser.getAuthResponse().id_token;
+    // send this token to your backend
+  }
+  </script>
+</head>
+  
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <h1 class="h3 mb-4 text-gray-800">Add Source</h1>
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Upload Files -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Upload Files</div>
+                      <input id="file-input" type="file" multiple style="display: none;">
+                    </div>
+                    <div class="col-auto">
+                      <label for="file-input" id="upload-btn" style="cursor: pointer;">
+                        <div class="fas fa-upload h5 mb-0 font-weight-bold text-gray-800" style="font-size: 40px;"></div> 
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Local Path -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Local Files</div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="fas fa-folder" style="font-size: 40px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Google Drive -->
+            <div class="col-xl-3 col-md-6 mb-4">
+            <!--div class="g-signin2" data-onsuccess="onSignIn"-->
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Google Drive</div>
+                    </div>
+                    <div class="col-auto">
+                      <div class="g-signin2 fab fa-google-drive" data-onsuccess="onSignIn" style="font-size: 40px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <!--/div-->
+            </div>
+
+            
+            <!-- S3 Bucket -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Amazon S3</div>
+                    </div>
+                    <div class="col-auto">
+                      <!-- Get the Amazon S3 logo from static folder -->
+                      <img src="{{ url_for('static', filename='img/s3_logo.png') }}" style="width: 40px;" alt="Amazon S3 Logo">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <!-- /.row -->
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+
+      <!-- static/js/upload_files.js -->
+      <script src="{{ url_for('static', filename='js/upload_files.js') }}"></script>
+
+{% endblock %}

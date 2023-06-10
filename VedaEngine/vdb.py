@@ -21,17 +21,6 @@ schema = CollectionSchema(fields, "hello_milvus is the simplest demo to introduc
 hello_milvus = Collection("hello_milvus", schema)
 
 
-# Setup schema---------------------------
-collection_name = "test_collection"
-if not utility.has_collection(collection_name):
-    collection = Collection(
-        name=collection_name,
-        schema=schema,
-        using='default',
-        shards_num=2
-    )
-
-
 # Insert data---------------------------
 import random
 entities = [
