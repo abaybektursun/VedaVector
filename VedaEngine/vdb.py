@@ -49,5 +49,21 @@ if not utility.has_collection(collection_name):
     )
 
 
+# Insert data---------------------------
+import random
+data = [
+  [i for i in range(2000)],
+  [str(i) for i in range(2000)],
+  [i for i in range(10000, 12000)],
+  [[random.random() for _ in range(2)] for _ in range(2000)]
+]
+
+data.append([str("dy"*i) for i in range(2000)])
+
+collection = Collection(collection_name)      # Get an existing collection.
+mr = collection.insert(data)
+
+
+
 # Clean up---------------------------
 connections.disconnect("default")
