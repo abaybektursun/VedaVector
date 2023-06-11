@@ -1,30 +1,46 @@
 from langchain.embeddings import LlamaCppEmbeddings
 from sklearn.metrics.pairwise import cosine_similarity
+from PyPDF2 import PdfReader
 
-class Vectorizer:
-    def __init__(self, model_path):
-        self.model_path = model_path
-        self.llama = LlamaCppEmbeddings(model_path=model_path)
+from langchain.embeddings import HuggingFaceInstructEmbeddings
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores import Milvus
+from langchain.document_loaders import TextLoader
 
-    def embed_documents(self, documents):
-        return self.llama.embed_documents(documents)
+def get_pdf_text(pdf_docs):
+    text = ""
+    for pdf in pdf_docs:
+        pdf_reader = PdfReader(pdf)
+        for page in pdf_reader.pages:
+            text += page.extract_text()
+    return text
 
-if __name__ == "__main__":
-    model_path = "Wizard-Vicuna-13B-Uncensored.ggmlv3.q4_0.bin"
-    vectorizer = Vectorizer(model_path)
-    
-    
-    text1 = "Her hand touched mine and I felt a shock of electricity run through my body."
-    text2 = "Gently, she kissed me on the neck, wispering in my ear, 'I love you.'"
-    text3 = "llama_model_load_internal: mem required  = 9031.70 MB (+ 3216.00 MB per state)"
-    doc_result = vectorizer.embed_documents([text1, text2, text3])    
+def get_text_chunks(text):
+    text_splitter = CharacterTextSplitter(
+        separator="\n",
+        chunk_size=1000,
+        chunk_overlap=200,
+        length_function=len
+    )
+    chunks = text_splitter.split_text(text)
+    return chunks
+
+loader = TextLoader('text.txt')
+documents = loader.load()
+text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+docs = text_splitter.split_documents(documents)
+
+embeddings = LlamaCppEmbeddings(model_path="Wizard-Vicuna-13B-Uncensored.ggmlv3.q4_0.bin")
 
 
-    # Cosine similarity betwenn text1, text2, and text3 and print the results
-    similarity_mat = cosine_similarity(doc_result)
-    # Print the similarity separately
-    print("Similarity between text1 and text2: ", similarity_mat[0][1])
-    print("Similarity between text1 and text3: ", similarity_mat[0][2])
-    print("Similarity between text2 and text3: ", similarity_mat[1][2])
+vector_db = Milvus.from_documents(
+    docs,
+    embeddings,
+    connection_args={"host": "127.0.0.1", "port": "19530"}
+)
 
 
+query = "What did the president say about Ketanji Brown Jackson"
+docs = vector_db.similarity_search(query)
+
+print(docs[0].page_content)
