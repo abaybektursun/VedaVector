@@ -28,8 +28,7 @@ documents = loader.load()
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
 
-embeddings = HuggingFaceInstructEmbeddings("hkunlp/instructor-xl")
-
+embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
 
 vector_db = Milvus.from_documents(
     docs,
