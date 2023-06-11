@@ -1,5 +1,3 @@
-from langchain.embeddings import LlamaCppEmbeddings
-from sklearn.metrics.pairwise import cosine_similarity
 from PyPDF2 import PdfReader
 
 from langchain.embeddings import HuggingFaceInstructEmbeddings
@@ -30,7 +28,7 @@ documents = loader.load()
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
 
-embeddings = LlamaCppEmbeddings(model_path="Wizard-Vicuna-13B-Uncensored.ggmlv3.q4_0.bin")
+embeddings = HuggingFaceInstructEmbeddings("hkunlp/instructor-xl")
 
 
 vector_db = Milvus.from_documents(
